@@ -3,7 +3,7 @@ import os
 import streamlit as sl
 from langchain.text_splitter import CharacterTextSplitter
 from langchain.embeddings.openai import OpenAIEmbeddings
-# from langchain.vectorstores import Chroma
+from langchain.vectorstores import Chroma
 from langchain.vectorstores import FAISS
 from langchain.chains.question_answering import load_qa_chain
 from langchain.chat_models import ChatOpenAI
@@ -80,7 +80,9 @@ def main():
                 
                 # create vector store
                 embeddings = OpenAIEmbeddings()
+                
                 knowledge_base = FAISS.from_texts(chunks, embedding=embeddings)
+                
                 
                 #show user input 
                 user_input = sl.text_input("Ask a question about your PDF:")
@@ -88,7 +90,7 @@ def main():
                 #RAG Based on user input
                 if user_input:
                     #llm = ChatGoogleGenerativeAI(model="gemini-1.5-pro")
-                    llm =ChatOpenAI(temperature=0.7, model_name="gpt-4o-mini") # define llm and its parameters
+                    llm = ChatOpenAI(temperature=0.7, model_name="gpt-4o-mini") # define llm and its parameters
                     
                     retriever = knowledge_base.as_retriever(search_kwargs={"k": 25}) # make it take 25 chucnks to provide more context
                     
